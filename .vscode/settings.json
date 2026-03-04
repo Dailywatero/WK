@@ -4,5 +4,6 @@
     ],
     "python.analysis.extraPaths": [
         "/opt/ros/noetic/lib/python3/dist-packages"
-    ]
+    ],
+    "cmake.sourceDirectory": "/home/water/WK（宇树机器人用）（开源项目）/G1Nav2D/src/fastlio2"
 }
