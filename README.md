@@ -54,77 +54,66 @@ WK/
 ## 快速开始
 
 ### 1. 克隆仓库
-、、、
-bash
+```bash
 
 git clone https://github.com/Dailywatero/WK.git
 
 cd WK
-、、、
+```
 
 ### 2. 安装 Livox SDK2
-bash
+```bash
 
 
 sudo apt install cmake
-
-
 git clone https://github.com/Livox-SDK/Livox-SDK2.git
-
-
 cd Livox-SDK2
-
-
 mkdir build && cd build
-
-
 cmake … && make -j
-
-
 sudo make install
-
+```
 
 ### 3. 修改雷达 IP 及地图路径
 
 1. 修改本机与雷达 IP：
-bash
+```bash
 cd WK/G1Nav2D/src/livox_ros_driver2/config
 gedit MID360_config.json
-
+```
 根据你的网络环境修改 “lidar_configs” 里的雷达 IP 和 “host_net_info” 里的本机 IP
 雷达ip一般不用修改，192.168.123.120
 用ifconfig查自己的ip，要在同一网段下
 
 
 2. 修改地图保存路径：
-bash
+```bash
 cd WK/G1Nav2D/src/fastlio2/src
 gedit map_builder_node.cpp
-
+```
 将文件中地图保存路径（如 /home/water/map/）改为你自己的路径
 
 
 ### 4. 编译 ROS 工作空间
-bash
+```bash
 cd WK/G1Nav2D
-
+```
 建议先单独编译 livox_ros_driver2 和 fastlio2，避免消息头文件找不到
-
+```bash
 catkin_make -DROS_EDITION=ROS1 --pkg livox_ros_driver2
 catkin_make -DROS_EDITION=ROS1 --pkg fastlio2
 
-整体编译
+#整体编译
 
 catkin_make
 source devel/setup.bash
-
+```
 
 ### 5. 安装导航相关依赖
-bash
+```bash
 sudo apt install ros-noetic-teb-local-planner
 ros-noetic-global-planner
 ros-noetic-costmap-server
-
+```
 
 ---
 
@@ -133,26 +122,26 @@ ros-noetic-costmap-server
 ### 1. 建图与保存地图
 
 **建图：**
-bash
+```bash
 cd WK/G1Nav2D
 source devel/setup.bash
 roslaunch fastlio2 mapping.launch
-
+```
 
 **保存地图：**
 
 新开终端：
-bash
+```bash
 cd WK/G1Nav2D
 source devel/setup.bash
 rosrun map_server map_saver map:=/projected_map -f /home/你的用户名/map/mymap
-
+```
 
 ### 2. 编辑地图
-bash
+```bash
 source devel/setup.bash
 roslaunch ros_map_edit map_edit.launch
-
+```
 
 下载photogimp.desktop
 在里面编辑pgm地图文件
@@ -160,45 +149,45 @@ roslaunch ros_map_edit map_edit.launch
 ### 3. 启动导航
 
 1. 修改地图加载路径：
-bash
+```bash
 cd WK/G1Nav2D/src/fastlio2/launch
 gedit gridmap_load.launch
-
+```
 修改 2dmap_file 参数为你保存的地图路径，例如：
 <arg name="2dmap_file" default="/home/你的用户名/map/mymap.yaml" />
 
 2. 启动导航：
-bash
+```bash
 cd WK/G1Nav2D
 source devel/setup.bash
 roslaunch fastlio2 navigation.launch
-
+```
 3. 初始重定位（如有需要）：
-bash
+```bash
 rosservice call /slam_reloc
 “{pcd_path: ‘/home/你的用户名/WK/G1Nav2D/src/fastlio2/PCD/map.pcd’,
 x: 0.0, y: 0.0, z: 0.0, roll: 0.0, pitch: 0.0, yaw: 0.0}”
-
+```
 
 在 RViz 中确认点云与地图是否配准良好。
 
 ### 4. 运动控制（G1）
 
 参考宇树官方文档安装 `unitree_sdk2_python`：
-bash
+```bash
 cd WK/unitree_sdk2_python/example/g1/high_level
 python3 g1_control_mpc.py eth0 # 或其他 g1_control_*.py
-
+```
 
 ### 5. 语音交互导航（基于 py-xiaozhi）
 
 详细配置请参考 `PythonProject/py-xiaozhi-main/README.md`，这里给出关键步骤。
 
 **安装依赖：**
-bash
+```bash
 cd WK/PythonProject/py-xiaozhi-main
 pip install -r requirements.txt
-
+```
 
 **语音导航到目标点（简易版）：**
 
@@ -213,10 +202,10 @@ pip install -r requirements.txt
 4. 在 `PythonProject/daohang/daohang-dianti.py` 中修改目标点坐标。
 
 **启动语音程序：**
-bash
+```bash
 cd WK/PythonProject/py-xiaozhi-main
 python3 main.py
-
+```
 
 > 实现语音交互导航需要同时启动：语音程序、运控程序、导航程序。
 
