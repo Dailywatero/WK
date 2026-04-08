@@ -1,8 +1,0 @@
-prefix=/home/water/WK/G1Nav2D/devel
-
-Name: tool
-Description: Description of tool
-Version: 0.0.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 

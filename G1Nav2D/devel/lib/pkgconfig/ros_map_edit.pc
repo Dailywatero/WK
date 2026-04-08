@@ -1,8 +1,0 @@
-prefix=/home/water/WK/G1Nav2D/devel
-
-Name: ros_map_edit
-Description: Description of ros_map_edit
-Version: 0.0.0
-Cflags: -I/home/water/WK/G1Nav2D/src/ros_map_edit/include
-Libs: -L${prefix}/lib -lros_map_edit
-Requires: nav_msgs roscpp rospy rviz geometry_msgs visualization_msgs std_msgs tf2 tf2_ros tf2_geometry_msgs interactive_markers map_server cv_bridge

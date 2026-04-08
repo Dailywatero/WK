@@ -1,8 +1,0 @@
-prefix=/home/water/WK/G1Nav2D/devel
-
-Name: velocity_smoother_ema
-Description: Description of velocity_smoother_ema
-Version: 0.0.0
-Cflags: -I/home/water/WK/G1Nav2D/src/velocity_smoother_ema/include
-Libs: -L${prefix}/lib -lvelocity_smoother_ema
-Requires: 

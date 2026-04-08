@@ -1,8 +1,0 @@
-prefix=/home/water/WK/G1Nav2D/devel
-
-Name: pointcloud_to_laserscan
-Description: Description of pointcloud_to_laserscan
-Version: 1.4.0
-Cflags: -I/home/water/WK/G1Nav2D/src/pointcloud_to_laserscan/include
-Libs: -L${prefix}/lib -lpointcloud_to_laserscan
-Requires: roscpp message_filters nodelet sensor_msgs tf2 tf2_ros
