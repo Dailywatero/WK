@@ -1,0 +1,77 @@
+name: 📊 记录仓库流量数据
+
+on:
+  schedule:
+    # 每周日晚上 23:45 运行
+    - cron: "45 23 * * 0"
+  # 允许手动触发
+  workflow_dispatch:
+
+jobs:
+  record-traffic:
+    name: 获取流量数据并保存到私有仓库
+    runs-on: ubuntu-latest
+
+    steps:
+      # 获取当前时间
+      - name: 获取当前日期
+        id: date
+        run: echo "DATE=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+
+      # 使用 API 获取流量数据
+      - name: 获取 WK 仓库的流量数据
+        env:
+          GH_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
+        run: |
+          # 获取浏览量数据
+          curl -L \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            https://api.github.com/repos/${{ github.repository }}/traffic/views \
+            > views.json
+          
+          # 获取克隆数数据
+          curl -L \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            https://api.github.com/repos/${{ github.repository }}/traffic/clones \
+            > clones.json
+
+      # 克隆私有数据仓库
+      - name: 克隆私有数据仓库
+        env:
+          GH_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
+        run: |
+          git clone https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository_owner }}/traffic-data.git
+
+      # 保存数据到私有仓库
+      - name: 保存流量数据
+        run: |
+          cd traffic-data
+          
+          # 创建按仓库名分类的目录
+          mkdir -p wk
+          
+          # 保存数据，文件名包含日期
+          cp ../views.json wk/views-${{ steps.date.outputs.DATE }}.json
+          cp ../clones.json wk/clones-${{ steps.date.outputs.DATE }}.json
+          
+          # 同时保存一个 latest 副本（覆盖）
+          cp ../views.json wk/views-latest.json
+          cp ../clones.json wk/clones-latest.json
+          
+          # 配置 git
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          
+          # 提交并推送
+          git add .
+          git commit -m "记录 WK 仓库流量 - ${{ steps.date.outputs.DATE }}" || echo "无变化"
+          git push
+
+      # 清理临时文件
+      - name: 清理
+        run: |
+          rm -f views.json clones.json
